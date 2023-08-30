@@ -46,9 +46,11 @@ public class Main {
         grafo.adicionarAresta("Ponta Grossa", "Curitiba", 114);
 
         String inicio = "Foz do Iguacu";
-        String fim = "Uniao da Vitoria";
+        String fim = "Curitiba";
 
-        List<String> caminho = grafo.aStar(inicio, fim);
+        AEstrela aStar = new AEstrela(grafo);
+
+        List<String> caminho = aStar.encontrarCaminho(inicio, fim);
 
         if (caminho != null) {
             System.out.println("Caminho encontrado:");
