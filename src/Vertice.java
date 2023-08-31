@@ -1,24 +1,56 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Vertice {
-    private String nome;
-    private double custoG; // Custo do início até este vértice
-    private double custoH; // Heurística estimada do vértice até o objetivo
-    private double custoF; // Custo total estimado: custoG + custoH
-    private Vertice pai; // Vértice pai no caminho
+    private final String nome;
+    private List<Aresta> arestasAdjacentes;
+    private double lat;
+    private double lon;
+    private Vertice pai;
+    private double custoG;
+    private double custoH;
+    private double custoF;
 
     public Vertice(String nome) {
         this.nome = nome;
-        this.custoG = Double.MAX_VALUE;
-        this.custoH = 0.0; // Será calculado posteriormente
-        this.custoF = Double.MAX_VALUE;
+        this.arestasAdjacentes = new ArrayList<>();
         this.pai = null;
+    }
+
+    public Vertice(String nome, double lat, double lon) {
+        this.nome = nome;
+        this.arestasAdjacentes = new ArrayList<>();
+        this.lat = lat;
+        this.lon = lon;
+        this.pai = null;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public List<Aresta> getArestasAdjacentes() {
+        return arestasAdjacentes;
+    }
+
+    public void adicionarAresta(Aresta aresta) {
+        arestasAdjacentes.add(aresta);
+    }
+
+    public Vertice getPai() {
+        return pai;
+    }
+
+    public void setPai(Vertice pai) {
+        this.pai = pai;
     }
 
     public double getCustoG() {
@@ -43,13 +75,5 @@ class Vertice {
 
     public void setCustoF(double custoF) {
         this.custoF = custoF;
-    }
-
-    public Vertice getPai() {
-        return pai;
-    }
-
-    public void setPai(Vertice pai) {
-        this.pai = pai;
     }
 }

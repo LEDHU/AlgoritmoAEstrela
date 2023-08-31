@@ -1,42 +1,50 @@
 import java.util.*;
 
-
 class AEstrela {
-    Grafo grafo;
+    private final ArrayList<Vertice> grafo;
 
-    public AEstrela(Grafo grafo) {
-        this.grafo = grafo;
+    public AEstrela() {
+        this.grafo = new ArrayList<>();
     }
 
-    // Função de heurística simples, você pode modificar conforme necessário
-    private double calcularHeuristica(String atual, String objetivo) {
-        // Aqui você pode implementar uma heurística mais apropriada, como a distância em linha reta
-        return 0.0;
+    public void adicionarVertice(Vertice vertice) {
+        grafo.add(vertice);
     }
 
-    public List<String> encontrarCaminho(String inicio, String fim) {
-        PriorityQueue<Vertice> filaAberta = new PriorityQueue<>(Comparator.comparingDouble(v -> v.getCustoF()));
+    private double calcularHeuristica(Vertice atual, Vertice objetivo) {
+        double dx = Math.abs(atual.getLat() - objetivo.getLat());
+        double dy = Math.abs(atual.getLon() - objetivo.getLon());
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public List<Vertice> encontrarCaminho(Vertice inicio, Vertice fim) {
+        PriorityQueue<Vertice> filaPrioridade = new PriorityQueue<>(Comparator.comparingDouble(Vertice::getCustoF));
         Set<Vertice> visitados = new HashSet<>();
 
-        Vertice verticeInicial = grafo.getVertice(inicio);
-        verticeInicial.setCustoG(0);
-        verticeInicial.setCustoH(calcularHeuristica(inicio, fim));
-        verticeInicial.setCustoF(verticeInicial.getCustoG() + verticeInicial.getCustoH());
+        for (Vertice vertice : grafo) {
+            vertice.setCustoG(Double.POSITIVE_INFINITY);
+            vertice.setCustoH(0);
+            vertice.setCustoF(Double.POSITIVE_INFINITY);
+        }
 
-        filaAberta.add(verticeInicial);
+        inicio.setCustoG(0);
+        inicio.setCustoH(calcularHeuristica(inicio, fim));
+        inicio.setCustoF(inicio.getCustoG() + inicio.getCustoH());
 
-        while (!filaAberta.isEmpty()) {
-            Vertice atual = filaAberta.poll();
+        filaPrioridade.add(inicio);
 
-            if (atual.getNome().equals(fim)) {
+        while (!filaPrioridade.isEmpty()) {
+            Vertice atual = filaPrioridade.poll();
+
+            if (atual.equals(fim)) {
                 return reconstruirCaminho(atual);
             }
 
             visitados.add(atual);
 
-            for (Map.Entry<Vertice, Double> vizinhoEntry : grafo.getVizinhos(atual).entrySet()) {
-                Vertice vizinho = vizinhoEntry.getKey();
-                double custoAresta = vizinhoEntry.getValue();
+            for (Aresta aresta : atual.getArestasAdjacentes()) {
+                Vertice vizinho = aresta.getDestino();
+                double custoAresta = aresta.getPeso();
 
                 if (visitados.contains(vizinho)) {
                     continue;
@@ -47,30 +55,46 @@ class AEstrela {
                 if (novoCustoG < vizinho.getCustoG()) {
                     vizinho.setPai(atual);
                     vizinho.setCustoG(novoCustoG);
-                    vizinho.setCustoH(calcularHeuristica(vizinho.getNome(), fim));
+                    vizinho.setCustoH(calcularHeuristica(vizinho, fim));
                     vizinho.setCustoF(vizinho.getCustoG() + vizinho.getCustoH());
 
-                    if (!filaAberta.contains(vizinho)) {
-                        filaAberta.add(vizinho);
+                    if (!filaPrioridade.contains(vizinho)) {
+                        filaPrioridade.add(vizinho);
                     }
                 }
             }
-
         }
 
         return null;
     }
 
-    private List<String> reconstruirCaminho(Vertice destino) {
-        List<String> caminho = new ArrayList<>();
+    private List<Vertice> reconstruirCaminho(Vertice destino) {
+        List<Vertice> caminho = new ArrayList<>();
         Vertice atual = destino;
 
         while (atual != null) {
-            caminho.add(atual.getNome());
+            caminho.add(atual);
             atual = atual.getPai();
         }
 
         Collections.reverse(caminho);
         return caminho;
+    }
+
+
+    public Vertice encontrarVertice(String nome) {
+        for (Vertice vertice : grafo) {
+            if (Objects.equals(vertice.getNome(), nome)) return vertice;
+        }
+        return null;
+    }
+
+    public void printar(List<Vertice> x){
+        for(int i = 0; i < x.size(); i++){
+            if (i != x.size() - 1)
+                System.out.print(x.get(i).getNome() + " -> ");
+            else
+                System.out.print(x.get(i).getNome());
+        }
     }
 }
