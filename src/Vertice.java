@@ -3,19 +3,13 @@ import java.util.List;
 
 class Vertice {
     private final String nome;
-    private List<Aresta> arestasAdjacentes;
-    private double lat;
-    private double lon;
+    private final List<Aresta> arestasAdjacentes;
+    private final double lat;
+    private final double lon;
     private Vertice pai;
     private double custoG;
     private double custoH;
     private double custoF;
-
-    public Vertice(String nome) {
-        this.nome = nome;
-        this.arestasAdjacentes = new ArrayList<>();
-        this.pai = null;
-    }
 
     public Vertice(String nome, double lat, double lon) {
         this.nome = nome;

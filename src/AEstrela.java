@@ -61,6 +61,8 @@ class AEstrela {
                     if (!filaPrioridade.contains(vizinho)) {
                         filaPrioridade.add(vizinho);
                     }
+                    //System.out.println("Caminho: " + construirCaminhoString(vizinho) + "  Peso: " + vizinho.getCustoG());
+
                 }
             }
         }
@@ -96,5 +98,17 @@ class AEstrela {
             else
                 System.out.print(x.get(i).getNome());
         }
+    }
+
+    private String construirCaminhoString(Vertice vertice) {
+        StringBuilder caminho = new StringBuilder();
+        while (vertice != null) {
+            caminho.insert(0, vertice.getNome());
+            vertice = vertice.getPai();
+            if (vertice != null) {
+                caminho.insert(0, " -> ");
+            }
+        }
+        return caminho.toString();
     }
 }

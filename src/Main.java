@@ -88,8 +88,8 @@ public class Main {
         grafo.adicionarVertice(PG);
         grafo.adicionarVertice(Cur);
 
-        Vertice inicio = grafo.encontrarVertice("Foz do Iguacu");
-        Vertice fim = grafo.encontrarVertice("Curitiba");
+        Vertice inicio = grafo.encontrarVertice("Maringa");
+        Vertice fim = grafo.encontrarVertice("Uniao da Vitoria");
 
         if(inicio != null && fim != null) {
 
@@ -98,7 +98,7 @@ public class Main {
             if(caminho != null) grafo.printar(caminho);
 
         }
-        else System.out.println("Cidade não estar no grafo");
+        else System.out.println("Cidade não esta no grafo");
 
     }
 }
